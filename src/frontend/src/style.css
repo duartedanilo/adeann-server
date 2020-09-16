@@ -3,3 +3,7 @@
 h1, p {
   font-family: Lato;
 }
+
+.ant-steps-item-icon .ant-steps-icon {
+  margin-top: 5px;
+}

@@ -13,6 +13,7 @@ import {
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import Setting from "../Settings";
 import Dataset from "./../Dataset";
+import Run from "./../Run";
 import SimulationService from "../../service/Simulation.js";
 
 const { Step } = Steps;
@@ -43,6 +44,7 @@ export default ({ onChange, handleNext = () => {} }) => {
   const handleChange = () => {};
 
   const screens = [
+    <Run onChange={handleChange} simulationService={simulationService}/>,
     <Setting onChange={handleChange} simulationService={simulationService}/>,
     <Dataset onChange={handleChange} simulationService={simulationService}/>,
   ];
@@ -53,7 +55,6 @@ export default ({ onChange, handleNext = () => {} }) => {
   };
 
   const prev = () => {
-    alert();
     setCurrent(current - 1);
   };
 
@@ -80,7 +81,7 @@ export default ({ onChange, handleNext = () => {} }) => {
       <PageHeader
         ghost={false}
         onBack={() => window.history.back()}
-        title="ADEANN"
+        title="adeann toolkit"
         subTitle="version 1.0"
         extra={[
           <Form
@@ -141,25 +142,28 @@ export default ({ onChange, handleNext = () => {} }) => {
           flex: 1,
           justifyContent: "flex-end",
           flexDirection: "row",
+          width: "85%"
         }}
       >
         {current > 0 && (
-          <Button style={{ margin: "0 8px" }} onClick={prev}>
+          <Button style={{ margin: "0 8px" }} onClick={prev} size="large">
             Previous
           </Button>
         )}
         {current < steps.length - 1 && (
-          <Button type="primary" onClick={next}>
+          <Button type="primary" onClick={next} size="large">
             Next
           </Button>
         )}
         {current === steps.length - 1 && (
-          <Button
-            type="primary"
-            onClick={() => message.success("Processing complete!")}
-          >
-            Done
-          </Button>
+          // <Button
+          //   type="primary"
+          //   onClick={() => message.success("Processing complete!")}
+          //   size="large"
+          // >
+          //   Done
+          // </Button>
+          null
         )}
       </div>
     </>

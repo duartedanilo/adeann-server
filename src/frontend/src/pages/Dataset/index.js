@@ -19,7 +19,7 @@ import {
 
 import { message } from "antd";
 import { QuestionCircleOutlined, UploadOutlined } from "@ant-design/icons";
-import Resume from './../../components/Resume'
+import Resume from "./../../components/Resume";
 import axios from "axios";
 
 const { Title } = Typography;
@@ -58,7 +58,7 @@ const tailFormItemLayout = {
   },
 };
 
-const Dataset = ({simulationService}) => {
+const Dataset = ({ simulationService }) => {
   const [form] = Form.useForm();
   const [fileListTraining, setFileListTraining] = useState([]);
   const [fileListTest, setFileListTest] = useState([]);
@@ -73,7 +73,7 @@ const Dataset = ({simulationService}) => {
     headers: {
       authorization: "authorization-text",
     },
-
+    fileList: fileListTraining,
     uploading: false,
     onChange(info) {
       if (info.file.status !== "uploading") {
@@ -86,7 +86,7 @@ const Dataset = ({simulationService}) => {
       }
     },
     beforeUpload: (file) => {
-      alert(file.type);
+      // alert(file.type);
       if (
         file.type !== "text/csv" &&
         file.type !== "text/plain" &&
@@ -98,6 +98,7 @@ const Dataset = ({simulationService}) => {
       } else {
         message.success(`file uploaded`);
         setFileListTraining([file]);
+        simulationService.setTrainFile([file]);
       }
       return false;
     },
@@ -121,7 +122,7 @@ const Dataset = ({simulationService}) => {
       }
     },
     beforeUpload: (file) => {
-      alert(file.type);
+      // alert(file.type);
       if (
         file.type !== "text/csv" &&
         file.type !== "text/plain" &&
@@ -133,6 +134,7 @@ const Dataset = ({simulationService}) => {
       } else {
         message.success(`file uploaded`);
         setFileListTest([file]);
+        simulationService.setTestFile([file])
       }
       return false;
     },
@@ -142,9 +144,9 @@ const Dataset = ({simulationService}) => {
     const formData = new FormData();
 
     [...fileListTest, ...fileListTraining].forEach((file, i) => {
-      file.originalname =
-        (i == 0 ? "test." : "train.") + file.originalname.split(".")[1];
-      formData.append("files", file);
+      console.log(file);
+      const name = (i == 0 ? "test." : "train.") + file.name.split(".")[1];
+      formData.append("files", new File([file], name, { type: file.type }));
     });
 
     formData.append("myName", 4654654);
@@ -186,7 +188,7 @@ const Dataset = ({simulationService}) => {
   };
 
   return (
-    <div style={{width: "90%"}}>
+    <div style={{ width: "90%" }}>
       <h2>Dataset upload</h2>
       <div style={{ display: "flex", flexDirection: "row", flex: 1 }}>
         <Card title="Training Samples" style={{ width: "100%" }}>
@@ -216,6 +218,7 @@ const Dataset = ({simulationService}) => {
                 previewFile={true}
                 onRemove={() => {
                   setFileListTraining([]);
+                  simulationService.setTrainFile([])
                 }}
               >
                 <Button>
@@ -250,6 +253,7 @@ const Dataset = ({simulationService}) => {
                 previewFile={true}
                 onRemove={() => {
                   setFileListTest([]);
+                  simulationService.setTestFile([])
                 }}
               >
                 <Button>
@@ -261,9 +265,15 @@ const Dataset = ({simulationService}) => {
           </Form>
         </Card>
       </div>
-      <h2 style={{marginTop: "24px"}}>Settings resume</h2>
+      <h2 style={{ marginTop: "24px" }}>Settings resume</h2>
       <Resume simulationService={simulationService} />
-      <Button onClick={() => {handleUpload()}}>asdasd</Button>
+      <Button
+        onClick={() => {
+          handleUpload();
+        }}
+      >
+        asdasd
+      </Button>
     </div>
   );
 };

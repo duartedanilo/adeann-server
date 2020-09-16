@@ -12,6 +12,9 @@ export default class Simulation {
     this.generation = 10;
     this.population = 10;
     this.learningRate = 1;
+
+    this.testFile = null;
+    this.trainFile = null;
   }
 
   setNent = _nent => {
@@ -46,6 +49,12 @@ export default class Simulation {
   };
   setLearningRate = _learningRate => {
     this.learningRate = _learningRate;
+  };
+  setTestFile = _testFile => {
+    this.testFile = _testFile;
+  };
+  setTrainFile = _trainFile => {
+    this.trainFile = _trainFile;
   };
 
   toString = () => {

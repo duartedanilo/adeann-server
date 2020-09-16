@@ -1,205 +1,91 @@
-import React, { useState } from "react";
-import {
-  Form,
-  Input,
-  Tooltip,
-  Cascader,
-  Select,
-  Row,
-  Col,
-  Checkbox,
-  Button,
-  AutoComplete,
-  InputNumber,
-  Typography,
-  Card,
-  Steps,
-  Upload
-} from "antd";
+import React, { useRef, useState, useEffect } from "react";
+import { Col, Input, Result, Row, Statistic, Tabs, Progress } from "antd";
+import Resume from "./../../components/Resume";
 
-import { message } from "antd";
-import { QuestionCircleOutlined, UploadOutlined } from "@ant-design/icons";
-import CsvViewer from "react-csv-viewer";
+const { TabPane } = Tabs;
+const { Search } = Input;
 
-const { Title } = Typography;
-const { Option } = Select;
-const AutoCompleteOption = AutoComplete.Option;
-
-const formItemLayout = {
-  labelCol: {
-    xs: {
-      span: 24
-    },
-    sm: {
-      span: 8
-    }
-  },
-  wrapperCol: {
-    xs: {
-      span: 24
-    },
-    sm: {
-      span: 16
-    }
+const Run = ({ simulationService }) => {
+  const [seconds, setSeconds] = useState(0)
+  
+  const tick = () => {
+    setSeconds(seconds + 1)
   }
-};
 
-const tailFormItemLayout = {
-  wrapperCol: {
-    xs: {
-      span: 24,
-      offset: 0
-    },
-    sm: {
-      span: 16,
-      offset: 8
-    }
-  }
-};
+  useEffect(()=>{
+   
+      const interval = setInterval(tick, 1000);
+    
+  
+    return () => clearInterval(interval);
+    
+  })
 
-const Dataset = () => {
-  const [form] = Form.useForm();
-  const [fileListTraining, setFileListTraining] = useState([]);
-  const [fileListTest, setFileListTest] = useState([]);
-  const [uploading, setUploading] = useState(false);
-
-  const onFinish = values => {
-    console.log("Received values of form: ", values);
+  let interpreterForm = useRef(null);
+  const onFinish = ({ interpreter }) => {
+    console.log(interpreter);
+  };
+  const validateMessages = {
+    required: "${label} is required!",
+  };
+  const layout = {
+    labelCol: { span: 8 },
+    wrapperCol: { span: 12 },
   };
 
-  const propsTraining = {
-    name: "file",
-    action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-    headers: {
-      authorization: "authorization-text"
-    },
-    fileList: fileListTraining,
-    uploading: false,
-    onChange(info) {
-      if (info.file.status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === "done") {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-    beforeUpload: file => {
-      alert(file.type);
-      if (
-        file.type !== "text/csv" &&
-        file.type !== "text/plain" &&
-        file.type !== "application/vnd.ms-excel"
-      ) {
-        message.error(`${file.name} is not a .csv or .txt file`);
-      } else {
-        message.success(`file uploaded`);
-        setFileListTraining([file]);
-      }
-      return false;
-    }
-  };
-
-  const propsTest = {
-    name: "file",
-    action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-    headers: {
-      authorization: "authorization-text"
-    },
-    fileList: fileListTest,
-    uploading: false,
-    onChange(info) {
-      if (info.file.status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === "done") {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-    beforeUpload: file => {
-      alert(file.type);
-      if (
-        file.type !== "text/csv" &&
-        file.type !== "text/plain" &&
-        file.type !== "application/vnd.ms-excel"
-      ) {
-        message.error(`${file.name} is not a .csv or .txt file`);
-      } else {
-        message.success(`file uploaded`);
-        setFileListTraining([file]);
-      }
-      return false;
-    }
-  };
-
-  const handleUpload = () => {
-    const formData = new FormData();
-    fileList.forEach(file => {
-      formData.append("files[]", file);
-    });
-
-    setUploading(true);
+  const callback = (key) => {
+    console.log(key);
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "row", flex: 1 }}>
-      <Card title="Training Samples" style={{ width: "100%" }}>
-        <Form onFinish={onFinish} scrollToFirstError layout="vertical">
-          <Form.Item
-            extra={`The accepted dataset types are .txt and .csv. and the last column of line is the output.`}
-            label={
-              <span>
-                Tranning Dataset
-                <Tooltip title="The samples used to trainning machine learning">
-                  <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
-                </Tooltip>
-              </span>
-            }
-            rules={[
-              {
-                required: true,
-                message: "Please input the number of neurons of Entry Layer!"
-              }
-            ]}
-            hasFeedback
-          >
-            <Upload {...propsTraining}>
-              <Button>
-                <UploadOutlined /> Attach a File
-              </Button>
-            </Upload>
-          </Form.Item>
-          {JSON.stringify(fileListTraining)}
-        </Form>
-      </Card>
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <Result
+        title="ADEANN is ready to start!"
+        extra={[
+          <Search
+            onSearch={(w) => alert(w)}
+            size="large"
+            placeholder="Type a simulation name"
+            enterButton="Run"
+            style={{ width: "450px" }}
+          />,
+        ]}
+      />
 
-      <Card title="Test Samples" style={{ marginLeft: "15px", width: "100%" }}>
-        <Form onFinish={onFinish} scrollToFirstError layout="vertical">
-          <Form.Item
-            extra={`The accepted dataset types are .txt and .csv. and the last column of line is the output.`}
-            label={
-              <span>
-                Test Dataset
-                <Tooltip title="The samples used to test machine learning">
-                  <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
-                </Tooltip>
-              </span>
-            }
-          >
-            <Upload {...propsTest}>
-              <Button>
-                <UploadOutlined /> Attach a File
-              </Button>
-            </Upload>
-          </Form.Item>
-          {JSON.stringify(fileListTest)}
-        </Form>
-      </Card>
+      <Tabs defaultActiveKey="1" onChange={callback}>
+        <TabPane tab="Simulation's Summary" key="1">
+          <Resume simulationService={simulationService} />
+        </TabPane>
+        <TabPane tab="Simulation status" key="2">
+          <Row gutter={16}>
+            <Col span={6}>
+              <Statistic title="Generation" value={93} suffix="/ 100" />
+            </Col>
+            <Col span={6}>
+              <Statistic title="Subject" value={93} suffix="/ 100" />
+            </Col>
+            <Col span={6}>
+              <Statistic title="time spent" value={seconds} suffix="s" />
+            </Col>
+            <Col span={23}>
+              <Progress
+                strokeColor={{
+                  "0%": "#108ee9",
+                  "100%": "#87d068",
+                }}
+                style={{marginTop: 15}}
+                percent={99.9}
+               
+              />
+            </Col>
+          </Row>
+        </TabPane>
+        <TabPane tab="Simulation results" key="3">
+          Content of Tab Pane 3
+        </TabPane>
+      </Tabs>
     </div>
   );
 };
 
-export default Dataset;
+export default Run;
