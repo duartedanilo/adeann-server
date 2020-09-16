@@ -20,6 +20,7 @@ class AdeannController {
 	}
 
 	store(req, res) {
+		return res.json({ status: "Simulação iniciada" });
 		const {
 			simulation_name,
 			username,
