@@ -138,7 +138,8 @@ def setConfigurarion(argv):
         except:
             pass
 
-    PATH = PATH + "___" + SIMULATION_NAME
+    if not os.path.exists("simulations"): os.mkdir("simulations")
+    PATH = "simulations/" + PATH + "___" + SIMULATION_NAME
     os.mkdir(PATH)
     if not os.path.exists("users"): os.mkdir("users")
     open("users/" + USERNAME + ".log", "a").write(PATH + "\n")
@@ -196,12 +197,14 @@ def writer(kwargs):
     fileWriter.write(kwargs)
 
 
-def writePercentFeedback(percent):
+def writePercentFeedback(percent, generation = ""):
     global PATH
     with open(PATH+"/subject_percent.log", "w") as file:
         file.write(str("0.0%"))
-    with open(PATH+"/generation_percent.log", "w") as file:
+    with open(PATH+"/population_percent.log", "w") as file:
         file.write(str(percent))
+    with open(PATH+"/generation_percent.log", "w") as file:
+        file.write(str(generation))
 
 
 def mean_absolute_percentage_error(y_true, y_pred):
@@ -287,7 +290,7 @@ def imprime_genstring(gen_string, individuos, gene_dec, geracao, file):
     global GERACAO, INDIVIDUOS, CONTID, INDIC, FIT
     for i in range(0, individuos):
         writer("\n-Individuo[" + str(i + 1) + "]-\n")
-        writePercentFeedback(str(subject_count() + 1) + "-" + str(GERACAO * INDIVIDUOS))
+        writePercentFeedback(str(subject_count() + 1) + "-" + str(GERACAO * INDIVIDUOS), str(geracao) + "-" + str(GERACAO))
         for j in range(0, gene_dec):
             writer(str(gen_string[i][j]))
         CONTID += 1

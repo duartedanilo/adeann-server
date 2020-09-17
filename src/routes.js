@@ -6,5 +6,6 @@ const AdeannController = require('./controllers/AdeannController')
 
 routes.post('/adeann', multer(multerConfig).array('files', 2), AdeannController.store)
 routes.get('/status/:username', AdeannController.status)
+routes.get('/simulation/:username', AdeannController.simulation)
 
 module.exports = routes;
