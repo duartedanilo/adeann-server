@@ -4,6 +4,7 @@ import {
   Input,
   Tooltip,
   Cascader,
+  Divider,
   Select,
   Row,
   Col,
@@ -15,9 +16,9 @@ import {
   Card,
   Steps,
 } from "antd";
-import { QuestionCircleOutlined } from "@ant-design/icons";
+import { QuestionCircleOutlined, WarningOutlined } from "@ant-design/icons";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 const { Option } = Select;
 const AutoCompleteOption = AutoComplete.Option;
 
@@ -58,10 +59,11 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
   const [nent, setNent] = useState(1);
   const [nsai, setNsai] = useState(1);
   const [nint, setNint] = useState([1]);
-  const [nintX, setNintX] = useState([
-    { min: 1, max: 200 },
-    { min: 1, max: 200 },
-  ]);
+  const [nintX, setNintX] = useState({
+   "0_0": { min: 1, max: 200 },
+   "1_0": { min: 1, max: 200 },
+   "1_1": { min: 1, max: 200 },
+  });
   const [activationFunction, setActivationFunctionX] = useState({
     "0_0": "tanh",
     "1_0": "tanh",
@@ -69,6 +71,10 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
   });
 
   const [activationFunctionUpdate, setActivationFunctionUpdate] = useState(
+    false
+  );
+
+  const [minMaxUpdate, setMinMaxUpdate] = useState(
     false
   );
 
@@ -83,6 +89,11 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
   const activationFunctionUpdateInput = () => {
     setActivationFunctionUpdate(true);
     setTimeout(() => setActivationFunctionUpdate(false), 10);
+  };
+
+  const minMaxUpdateInput = () => {
+    setMinMaxUpdate(true);
+    setTimeout(() => setMinMaxUpdate(false), 10);
   };
 
   const onFinish = (values) => {
@@ -119,58 +130,64 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
           }}
         >
           <Form onFinish={onFinish} scrollToFirstError layout="vertical">
-            <Form.Item
-              label={
-                <span>
-                  Neurons of Entry Layer
-                  <Tooltip title="NENT number">
-                    <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
-                  </Tooltip>
-                </span>
-              }
-              rules={[
-                {
-                  required: true,
-                  message: "Please input the number of neurons of Entry Layer!",
-                },
-              ]}
-              hasFeedback
-            >
-              <InputNumber
-                style={{ width: "100%" }}
-                min={1}
-                max={100}
-                value={nent}
-                onChange={(value) => {
-                  setNent(value);
-                  simulationService.setNent(value);
-                }}
-              />
-            </Form.Item>
-
-            <Form.Item
-              label={
-                <span>
-                  Neurons of Outter Layer
-                  <Tooltip title="NSAI number">
-                    <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
-                  </Tooltip>
-                </span>
-              }
-            >
-              <InputNumber
-                disabled={true}
-                value={1}
-                style={{ width: "100%" }}
-              />
-            </Form.Item>
-
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  label={
+                    <span>
+                      Neurons of Entry Layer
+                      <Tooltip title="NENT number">
+                        <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
+                      </Tooltip>
+                    </span>
+                  }
+                  rules={[
+                    {
+                      required: true,
+                      message:
+                        "Please input the number of neurons of Entry Layer!",
+                    },
+                  ]}
+                  hasFeedback
+                >
+                  <InputNumber
+                    style={{ width: "100%" }}
+                    min={1}
+                    max={100}
+                    value={nent}
+                    onChange={(value) => {
+                      setNent(value);
+                      simulationService.setNent(value);
+                    }}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label={
+                    <span>
+                      Neurons of Outter Layer
+                      <Tooltip title="NSAI number">
+                        <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
+                      </Tooltip>
+                    </span>
+                  }
+                >
+                  <InputNumber
+                    disabled={true}
+                    value={1}
+                    style={{ width: "100%" }}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
             <Form.Item label="Number of Hidden Layers">
               <Select
                 value={nint}
                 onChange={(e) => {
                   console.log(e);
                   setNint(e);
+                  simulationService.setNint(e);
                 }}
                 style={{ width: "100%" }}
                 mode="tags"
@@ -182,23 +199,41 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
                   2 Hidden Layer
                 </Option>
               </Select>
+
+              {nint?.length == 2 && (
+                <div style={{ paddingTop: "8px" }}>
+                  <Text keyboard>
+                    <Tooltip
+                      color="geekblue"
+                      title="The system will run all settings for 1th hidden layer(with one layer) and after
+                finishing it will run for 2th hidden layer(with two layer). At the end, the best
+                individual from each topology is compared."
+                    >
+                      <span>
+                        <WarningOutlined /> The adeann will run twice
+                      </span>
+                    </Tooltip>
+                  </Text>
+                </div>
+              )}
             </Form.Item>
-            {nint.map((number, index) =>
+
+            {nint?.map((number, index) =>
               Array(number)
                 .fill(1)
                 .map((_, i) => (
-                  <div>
-                    <h3 level={5} style={{ marginTop: "24px" }}>
-                      {nint.length > 1
+                  <Card
+                    style={{ marginBottom: "16px" }}
+                    title={
+                      nint.length > 1
                         ? `${number}th Layer Sequence`
-                        : `Configuration of ${_} layer`}
-                    </h3>
-                    <h4 level={5}>
-                      <strong>
-                        {nint.length > 1
-                          ? `Configure #${i + 1}/${nint[index]} layer sequence`
-                          : ``}
-                      </strong>
+                        : `Configuration of ${_} layer`
+                    }
+                  >
+                    <h4 level={5} style={{ marginBottom: "8px" }}>
+                      {nint.length > 1
+                        ? `Configure #${i + 1}/${nint[index]} layer sequence`
+                        : ``}
                     </h4>
                     <Row gutter={16}>
                       <Col span={12}>
@@ -220,13 +255,13 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
                             min={1}
                             max={200}
                             style={{ width: "100%" }}
-                            value={nintX[i].min}
+                            value={nintX[`${index}_${i}`]?.min}
                             onChange={(value) => {
                               const nintx = nintX;
-
-                              nintx[i] = { ...nintx[i], min: +value };
+                              nintx[`${index}_${i}`] = { ...nintx[`${index}_${i}`], min: +value };
                               setNintX(nintx);
                               simulationService.setNintX(nintx);
+                              minMaxUpdateInput()
                             }}
                           />
                         </Form.Item>
@@ -249,14 +284,14 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
                           <InputNumber
                             min={1}
                             max={200}
-                            value={nintX[i].max}
+                            value={nintX[`${index}_${i}`]?.max}
                             style={{ width: "100%" }}
                             onChange={(value) => {
                               const nintx = nintX;
-
-                              nintx[i] = { ...nintx[i], max: +value };
+                              nintx[`${index}_${i}`] = { ...nintx[`${index}_${i}`], max: +value };
                               setNintX(nintx);
                               simulationService.setNintX(nintx);
+                              minMaxUpdateInput()
                             }}
                           />
                         </Form.Item>
@@ -293,9 +328,11 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
                         <Option value="tahn">tahn</Option>
                       </Select>
                     </Form.Item>
-                  </div>
+                  </Card>
                 ))
             )}
+
+            <Divider />
 
             <Form.Item label="Optimizer function">
               <Select

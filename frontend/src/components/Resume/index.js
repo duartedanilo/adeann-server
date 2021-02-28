@@ -7,6 +7,7 @@ import {
   Select,
   Row,
   Col,
+  Divider,
   Checkbox,
   Button,
   AutoComplete,
@@ -55,6 +56,7 @@ const tailFormItemLayout = {
 
 const RegistrationForm = ({ onNextHandle, simulationService }) => {
   const [form] = Form.useForm();
+
   const [nent, setNent] = useState(simulationService.nent);
   const [nsai, setNsai] = useState(simulationService.nsai);
   const [nint, setNint] = useState(simulationService.nint);
@@ -127,10 +129,6 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
               max={100}
               disabled={true}
               value={nent}
-              onChange={(value) => {
-                setNent(value);
-                simulationService.setNent(value);
-              }}
             />
           </Form.Item>
 
@@ -147,126 +145,122 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
             <InputNumber disabled={true} value={1} style={{ width: "100%" }} />
           </Form.Item>
 
-          <Form.Item label="Number of Hidden Layers">
-            <Select
-              value={nint}
-              onChange={setNint}
-              style={{ width: "100%" }}
-              disabled={true}
-            >
-              <Option value={1}>1 Hidden Layer</Option>
-              <Option value={2}>2 Hidden Layer</Option>
-            </Select>
-          </Form.Item>
-
-          {Array(nint)
-            .fill(1)
-            .map((_, i) => (
-              <>
-                <Row gutter={16}>
-                  <Col span={12}>
-                    <Form.Item
-                      key={i}
-                      label={
-                        <span>
-                          Minimum Number of Neurons of <strong>{i + 1}º</strong>{" "}
-                          Hidden Layer
-                          <Tooltip title={`NINT${i + 1}`}>
-                            <QuestionCircleOutlined
-                              style={{ marginLeft: "3px" }}
-                            />
-                          </Tooltip>
-                        </span>
-                      }
-                    >
-                      <InputNumber
-                        disabled={true}
-                        min={1}
-                        max={200}
-                        style={{ width: "100%" }}
-                        value={nintX[i].min}
-                        onChange={(value) => {
-                          const nintx = nintX;
-
-                          nintx[i] = { ...nintx[i], min: +value };
-                          setNintX(nintx);
-                          simulationService.setNintX(nintx);
-                        }}
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item
-                      key={i}
-                      label={
-                        <span>
-                          Maximum Number of Neurons of <strong>{i + 1}º</strong>{" "}
-                          Hidden Layer
-                          <Tooltip title={`NINT${i + 1}`}>
-                            <QuestionCircleOutlined
-                              style={{ marginLeft: "3px" }}
-                            />
-                          </Tooltip>
-                        </span>
-                      }
-                    >
-                      <InputNumber
-                        disabled={true}
-                        min={1}
-                        max={200}
-                        value={nintX[i].max}
-                        style={{ width: "100%" }}
-                        onChange={(value) => {
-                          const nintx = nintX;
-
-                          nintx[i] = { ...nintx[i], max: +value };
-                          setNintX(nintx);
-                          simulationService.setNintX(nintx);
-                        }}
-                      />
-                    </Form.Item>
-                  </Col>
-                </Row>
-
-                <Form.Item
-                  key={i}
-                  label={
-                    <span>
-                      Activation function of <strong>{i + 1}º</strong> Hidden
-                      Layer
-                      <Tooltip title={`${i + 1} Activation Function`}>
-                        <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
-                      </Tooltip>
-                    </span>
+          {nint?.map((number, index) =>
+            Array(number)
+              .fill(1)
+              .map((_, i) => (
+                <Card
+                  style={{ marginBottom: "16px" }}
+                  title={
+                    nint.length > 1
+                      ? `${number}th Layer Sequence`
+                      : `Configuration of ${_} layer`
                   }
                 >
-                  <Select
-                    disabled={true}
-                    value={activationFunction[i]}
-                    onChange={(value) => {
-                      const functions = activationFunction;
-                      functions[i] = value;
-                      setActivationFunctionX(functions);
-                      simulationService.setActivationFunctionX(functions);
-                    }}
-                    style={{ width: "100%" }}
+                  <h4 level={5} style={{ marginBottom: "8px" }}>
+                    {nint.length > 1
+                      ? `Configure #${i + 1}/${nint[index]} layer sequence`
+                      : ``}
+                  </h4>
+                  <Row gutter={16}>
+                    <Col span={12}>
+                      <Form.Item
+                        key={i}
+                        label={
+                          <span>
+                            Minimum Number of Neurons of{" "}
+                            <strong>{i + 1}º</strong> Hidden Layer
+                            <Tooltip title={`NINT${i + 1}`}>
+                              <QuestionCircleOutlined
+                                style={{ marginLeft: "3px" }}
+                              />
+                            </Tooltip>
+                          </span>
+                        }
+                      >
+                        <InputNumber
+                          min={1}
+                          max={200}
+                          style={{ width: "100%" }}
+                          value={nintX[`${index}_${i}`]?.min}
+                          disabled
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                      <Form.Item
+                        key={i}
+                        label={
+                          <span>
+                            Maximum Number of Neurons of{" "}
+                            <strong>{i + 1}º</strong> Hidden Layer
+                            <Tooltip title={`NINT${i + 1}`}>
+                              <QuestionCircleOutlined
+                                style={{ marginLeft: "3px" }}
+                              />
+                            </Tooltip>
+                          </span>
+                        }
+                      >
+                        <InputNumber
+                          min={1}
+                          max={200}
+                          value={nintX[`${index}_${i}`]?.max}
+                          style={{ width: "100%" }}
+                          disabled
+                        />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+
+                  <Form.Item
+                    key={i}
+                    label={
+                      <span>
+                        Activation function of <strong>{i + 1}º</strong> Hidden
+                        Layer
+                        <Tooltip title={`${i + 1} Activation Function`}>
+                          <QuestionCircleOutlined
+                            style={{ marginLeft: "3px" }}
+                          />
+                        </Tooltip>
+                      </span>
+                    }
                   >
-                    <Option value="linear">linear</Option>
-                    <Option value="softmax">softmax</Option>
-                    <Option value="tahn">tahn</Option>
-                  </Select>
-                </Form.Item>
-              </>
-            ))}
+                    <Select
+                      value={activationFunction[`${index}_${i}`]}
+                      disabled
+                      style={{ width: "100%" }}
+                    >
+                      <Option value="linear">linear</Option>
+                      <Option value="softmax">softmax</Option>
+                      <Option value="tahn">tahn</Option>
+                    </Select>
+                  </Form.Item>
+                </Card>
+              ))
+          )}
+
+          <Divider />
+
+          <Form.Item label="Optimizer function">
+            <Select
+              mode="tags"
+              value={optimizer}
+              disabled
+              style={{ width: "100%" }}
+            >
+              <Option value="rmsprop">rmsprop</Option>
+              <Option value="adam">adam</Option>
+              <Option value="sgd">sgd</Option>
+            </Select>
+          </Form.Item>
 
           <Form.Item label="Optimizer function">
             <Select
               disabled={true}
               value={optimizer}
-              onChange={(value) => {
-                setOptimizer(value);
-                simulationService.setOptimizer(value);
-              }}
+              disabled
               style={{ width: "100%" }}
             >
               <Option value="rmsprop">rmsprop</Option>
@@ -288,10 +282,7 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
             <InputNumber
               disabled={true}
               value={batch}
-              onChange={(value) => {
-                setBatch(value);
-                simulationService.setBatch(value);
-              }}
+              disabled
               style={{ width: "100%" }}
             />
           </Form.Item>
@@ -309,10 +300,6 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
             <InputNumber
               disabled={true}
               value={epochs}
-              onChange={(value) => {
-                setEpochs(value);
-                simulationService.setEpochs(value);
-              }}
               style={{ width: "100%" }}
             />
           </Form.Item>
@@ -345,10 +332,6 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
               min={1}
               max={100}
               value={generation}
-              onChange={(value) => {
-                setGeneration(value);
-                simulationService.setGeneration(value);
-              }}
             />
           </Form.Item>
 
@@ -365,10 +348,6 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
             <InputNumber
               disabled={true}
               value={population}
-              onChange={(value) => {
-                setPopulation(value);
-                simulationService.setPopulation(value);
-              }}
               style={{ width: "100%" }}
             />
           </Form.Item>
@@ -386,10 +365,6 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
             <InputNumber
               disabled={true}
               value={learningRate}
-              onChange={(value) => {
-                setLearningRate(value);
-                simulationService.setLearningRate(value);
-              }}
               style={{ width: "100%" }}
             />
           </Form.Item>

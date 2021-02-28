@@ -1,12 +1,21 @@
-export default class Simulation {
+class Simulation {
   constructor() {
+    localStorage.clear();
     this.nent = 1;
     this.nsai = 1;
-    this.nint = 1;
-    this.nintX = [{min: 1, max: 200}, {min:1, max: 200}];
-    this.activationFunction = {'0': 'tanh', '1': 'tanh'};
-    this.batch = '32';
-    this.optimizer = 'rmsprop';
+    this.nint = [1];
+    this.nintX = {
+      "0_0": { min: 1, max: 200 },
+      "1_0": { min: 1, max: 200 },
+      "1_1": { min: 1, max: 200 },
+    };
+    this.activationFunction = {
+      "0_0": "tanh",
+      "1_0": "tanh",
+      "1_1": "tanh",
+    };
+    this.batch = "32";
+    this.optimizer = ["rmsprop"];
     this.epochs = 1000;
 
     this.generation = 10;
@@ -15,56 +24,74 @@ export default class Simulation {
 
     this.testFile = null;
     this.trainFile = null;
+    localStorage.setItem("simulation", this.toString());
   }
 
-  setNent = _nent => {
+  setNent = (_nent) => {
     this.nent = _nent;
+    this.updateStorage();
   };
-  setNsai = _nsai => {
+  setNsai = (_nsai) => {
     this.nsai = _nsai;
+    this.updateStorage();
   };
-  setNint = _nint => {
+  setNint = (_nint) => {
     this.nint = _nint;
+    this.updateStorage();
   };
-  setNintX = _nintX => {
+  setNintX = (_nintX) => {
     this.nintX = _nintX;
+    this.updateStorage();
   };
-  setActivationFunctionX = _activationFunction => {
+  setActivationFunctionX = (_activationFunction) => {
     this.activationFunction = _activationFunction;
+    this.updateStorage();
   };
-  setOptimizer = _optimizer => {
+  setOptimizer = (_optimizer) => {
     this.optimizer = _optimizer;
+    this.updateStorage();
   };
-  setBatch = _batch => {
+  setBatch = (_batch) => {
     this.batch = _batch;
+    this.updateStorage();
   };
-  setEpochs = _epochs => {
+  setEpochs = (_epochs) => {
     this.epochs = _epochs;
+    this.updateStorage();
   };
-  setGeneration = _generation => {
+  setGeneration = (_generation) => {
     this.generation = _generation;
+    this.updateStorage();
   };
-  setPopulation = _population => {
+  setPopulation = (_population) => {
     this.population = _population;
+    this.updateStorage();
   };
-  setLearningRate = _learningRate => {
+  setLearningRate = (_learningRate) => {
     this.learningRate = _learningRate;
+    this.updateStorage();
   };
-  setTestFile = _testFile => {
+  setTestFile = (_testFile) => {
     this.testFile = _testFile;
+    this.updateStorage();
   };
-  setTrainFile = _trainFile => {
+  setTrainFile = (_trainFile) => {
     this.trainFile = _trainFile;
+    this.updateStorage();
   };
+
+  updateStorage = () => localStorage.setItem("simulation", this.toString());
+  clearStorage = () => localStorage.clear();
+  load = () => localStorage.getItem("simulation");
 
   toString = () => {
     return `{
     "nent": ${this.nent},
     "nsai": ${this.nsai},
-    "nint": ${this.nint},
+    "nint": ${JSON.stringify(this.nint)},
     "nintX": ${JSON.stringify(this.nintX)},
     "activationFunction": ${JSON.stringify(this.activationFunction)},
-    "optimizer": ${this.optimizer},
+    "optimizer": ${JSON.stringify(this.optimizer)},
     "batch": ${this.batch},
     "epochs": ${this.epochs},
     "generation": ${this.generation},
@@ -73,3 +100,6 @@ export default class Simulation {
 }`;
   };
 }
+
+
+export default new Simulation()

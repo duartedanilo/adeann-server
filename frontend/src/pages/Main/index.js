@@ -37,16 +37,16 @@ export default ({ onChange, handleNext = () => {} }) => {
   const [current, setCurrent] = useState(0);
   const [compiler, setCompiler] = useState("python");
 
-  const simulationService = new SimulationService();
+  const simulationService = SimulationService;
 
   let interpreterForm = useRef(null);
 
   const handleChange = () => {};
 
   const screens = [
-    <Run onChange={handleChange} simulationService={simulationService} />,
     <Setting onChange={handleChange} simulationService={simulationService} />,
     <Dataset onChange={handleChange} simulationService={simulationService} />,
+    <Run onChange={handleChange} simulationService={simulationService} />,
   ];
 
   const next = () => {
@@ -77,7 +77,7 @@ export default ({ onChange, handleNext = () => {} }) => {
       <PageHeader
         ghost={false}
         onBack={() => window.history.back()}
-        title="adeann toolkit"
+        title="ADEANN Toolkit"
         subTitle="version 1.0"
         extra={[
           <Form
@@ -112,9 +112,8 @@ export default ({ onChange, handleNext = () => {} }) => {
           </Form>,
         ]}
       />
-        <Divider style={{ marginTop: 5 }} />
-      <div style={{width: "90vw", margin: "auto", paddingBottom: "60px"}}>
-      
+      <Divider style={{ marginTop: 5 }} />
+      <div style={{ width: "90vw", margin: "auto", paddingBottom: "60px" }}>
         <div style={{ width: "95%", margin: "auto" }}>
           <Steps current={current}>
             {steps.map((item) => (
