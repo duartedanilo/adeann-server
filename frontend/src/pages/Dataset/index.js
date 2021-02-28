@@ -188,7 +188,7 @@ const Dataset = ({ simulationService }) => {
   };
 
   return (
-    <div style={{ width: "90%" }}>
+    <div style={{ width: "100%" }}>
       <h2>Dataset upload</h2>
       <div style={{ display: "flex", flexDirection: "row", flex: 1 }}>
         <Card title="Training Samples" style={{ width: "100%" }}>

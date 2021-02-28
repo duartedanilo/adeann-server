@@ -43,7 +43,7 @@ class AdeannController {
 	}
 
 	store(req, res) {
-		return res.json({ status: "Simulação iniciada" });
+		
 		const {
 			simulation_name,
 			username,
@@ -62,7 +62,8 @@ class AdeannController {
 			epochs,
 			interpreter
 		} = req.body;
-
+		console.log(req.body)
+		return res.json({ status: "Simulação iniciada" });
 		let command = "";
 
 		if (number_hidden_layers === 2)

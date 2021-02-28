@@ -7,3 +7,12 @@ h1, p {
 .ant-steps-item-icon .ant-steps-icon {
   margin-top: 5px;
 }
+
+span.ant-select-selection-item > span.ant-select-selection-item-remove{
+  display: flex;
+  align-items: center;
+}
+
+div.ant-steps-item-icon  {
+  padding-top: 8px;
+}

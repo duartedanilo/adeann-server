@@ -26,12 +26,15 @@ const Run = ({ simulationService }) => {
 
   useEffect(() => {
     const getStatus = async () => {
+      try{
       const {data} = await new StatusService().getSimulationStatus();
       console.log(data)
       setGeneration(data.generationPercent)
       setPopulation(data.populationPercent)
       setSubject(data.subjectPercent)
-    };
+      }catch(e){
+
+      }}
     getStatus();
   }, [seconds]);
 
