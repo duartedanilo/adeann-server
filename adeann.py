@@ -7,7 +7,7 @@ import os
 import numpy as np
 import uuid
 from datetime import datetime
-from sys import argv
+from sys import argv, platform
 from itertools import count
 
 # ALGORITMO GENÉTICO
@@ -402,8 +402,11 @@ def mapeamento_genotipo_fenotipo(NENT, NSAI, aleatorio, TIPO, file):
     NINT_N4[1] = NINT2
 
     try:
-        cmd = "c_exec\\executavel.exe " + str(NENT) + " " + str(NSAI) + " " + str(N) + " " + str(NINT1) + " " + str(
-            NINT2) + " "
+        if(platform != "linux"):
+            cmd = "c_exec\\executavel.exe "+str(NENT)+" "+str(NSAI)+" "+str(N)+" "+str(NINT1)+" "+str(NINT2)+" "
+        else: 
+            cmd = "c_exec/executavel "+str(NENT)+" "+str(NSAI)+" "+str(N)+" "+str(NINT1)+" "+str(NINT2)+" "
+        
         cmd_out = os.popen(cmd).read()
         writer(str(cmd_out))
     except TypeError:
@@ -751,7 +754,8 @@ def imprime_cabec(file):
     writer("\n Geracao  |Melhor Fitness         |Fitness Medio")
     writer("\n________________________________________________________________")
 
-setConfigurarion(argv)
-argsFormatted()
+if __name__ == '__main__':
+    setConfigurarion(argv)
+    argsFormatted()
 
-main()
+    main()
