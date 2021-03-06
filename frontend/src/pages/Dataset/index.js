@@ -151,6 +151,10 @@ const Dataset = ({ simulationService }) => {
 
     formData.append("myName", 4654654);
 
+    Object.keys(simulationService.toJSON()).forEach((key) => {
+      formData.append(key, simulationService.toJSON()[key])
+    })
+
     setUploading(true);
 
     axios({
@@ -165,26 +169,6 @@ const Dataset = ({ simulationService }) => {
         console.log(error);
       });
 
-    // // You can use any AJAX library you like
-    // request({
-    //   url: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-    //   method: "post",
-    //   processData: false,
-    //   data: formData,
-    //   success: () => {
-    //     this.setState({
-    //       fileList: [],
-    //       uploading: false,
-    //     });
-    //     message.success("upload successfully.");
-    //   },
-    //   error: () => {
-    //     this.setState({
-    //       uploading: false,
-    //     });
-    //     message.error("upload failed.");
-    //   },
-    // });
   };
 
   return (
@@ -272,7 +256,7 @@ const Dataset = ({ simulationService }) => {
           handleUpload();
         }}
       >
-        asdasd
+        upload
       </Button>
     </div>
   );

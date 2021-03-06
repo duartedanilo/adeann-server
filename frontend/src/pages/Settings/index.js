@@ -60,23 +60,22 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
   const [nsai, setNsai] = useState(1);
   const [nint, setNint] = useState([1]);
   const [nintX, setNintX] = useState({
-   "0_0": { min: 1, max: 200 },
-   "1_0": { min: 1, max: 200 },
-   "1_1": { min: 1, max: 200 },
+    "0_0": { min: 1, max: 200 },
+    "1_0": { min: 1, max: 200 },
+    "1_1": { min: 1, max: 200 },
   });
   const [activationFunction, setActivationFunctionX] = useState({
     "0_0": "tanh",
     "1_0": "tanh",
     "1_1": "tanh",
+    "N_0": "tanh",
   });
 
   const [activationFunctionUpdate, setActivationFunctionUpdate] = useState(
     false
   );
 
-  const [minMaxUpdate, setMinMaxUpdate] = useState(
-    false
-  );
+  const [minMaxUpdate, setMinMaxUpdate] = useState(false);
 
   const [optimizer, setOptimizer] = useState("rmsprop");
   const [batch, setBatch] = useState(32);
@@ -258,10 +257,13 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
                             value={nintX[`${index}_${i}`]?.min}
                             onChange={(value) => {
                               const nintx = nintX;
-                              nintx[`${index}_${i}`] = { ...nintx[`${index}_${i}`], min: +value };
+                              nintx[`${index}_${i}`] = {
+                                ...nintx[`${index}_${i}`],
+                                min: +value,
+                              };
                               setNintX(nintx);
                               simulationService.setNintX(nintx);
-                              minMaxUpdateInput()
+                              minMaxUpdateInput();
                             }}
                           />
                         </Form.Item>
@@ -288,10 +290,13 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
                             style={{ width: "100%" }}
                             onChange={(value) => {
                               const nintx = nintX;
-                              nintx[`${index}_${i}`] = { ...nintx[`${index}_${i}`], max: +value };
+                              nintx[`${index}_${i}`] = {
+                                ...nintx[`${index}_${i}`],
+                                max: +value,
+                              };
                               setNintX(nintx);
                               simulationService.setNintX(nintx);
-                              minMaxUpdateInput()
+                              minMaxUpdateInput();
                             }}
                           />
                         </Form.Item>
@@ -331,6 +336,33 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
                   </Card>
                 ))
             )}
+
+            <Form.Item
+              label={
+                <span>
+                  Activation function of <strong>Out</strong> Layer
+                  <Tooltip title={`Activation Function for Out Layer`}>
+                    <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
+                  </Tooltip>
+                </span>
+              }
+            >
+              <Select
+                value={activationFunction[`N_0`]}
+                onChange={(value) => {
+                  const functions = activationFunction;
+                  functions[`N_0`] = value;
+                  setActivationFunctionX(functions);
+                  simulationService.setActivationFunctionX(functions);
+                  activationFunctionUpdateInput();
+                }}
+                style={{ width: "100%" }}
+              >
+                <Option value="linear">linear</Option>
+                <Option value="softmax">softmax</Option>
+                <Option value="tahn">tahn</Option>
+              </Select>
+            </Form.Item>
 
             <Divider />
 

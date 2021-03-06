@@ -1,1 +1,0 @@
-{'mean_squared_error': 0.006017591794564699, 'mean_absolute_error': 0.05838995116452376, 'mean_absolute_percentage_error': 31.08968745122424, 'root_mean_squared_error': 0.24164012738889987, 'accuracy': 0.9166666666666666, 'subject': 132132132, 'path': 'path/17-09-2020_06-33-02___dc53055d-4850-4d09-9ca9-388cf4c2971c'}

@@ -241,24 +241,32 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
               ))
           )}
 
+          <Form.Item
+            label={
+              <span>
+                Activation function of <strong>Out</strong> Layer
+                <Tooltip title={`Activation Function for Out Layer`}>
+                  <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
+                </Tooltip>
+              </span>
+            }
+          >
+            <Select
+              disabled
+              value={activationFunction[`N_0`]}
+              style={{ width: "100%" }}
+            >
+              <Option value="linear">linear</Option>
+              <Option value="softmax">softmax</Option>
+              <Option value="tahn">tahn</Option>
+            </Select>
+          </Form.Item>
+
           <Divider />
 
           <Form.Item label="Optimizer function">
             <Select
               mode="tags"
-              value={optimizer}
-              disabled
-              style={{ width: "100%" }}
-            >
-              <Option value="rmsprop">rmsprop</Option>
-              <Option value="adam">adam</Option>
-              <Option value="sgd">sgd</Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item label="Optimizer function">
-            <Select
-              disabled={true}
               value={optimizer}
               disabled
               style={{ width: "100%" }}

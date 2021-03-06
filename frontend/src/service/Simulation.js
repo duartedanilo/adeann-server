@@ -24,6 +24,9 @@ class Simulation {
 
     this.testFile = null;
     this.trainFile = null;
+
+    this.simulation = "";
+    this.interpreter = "";
     localStorage.setItem("simulation", this.toString());
   }
 
@@ -79,6 +82,14 @@ class Simulation {
     this.trainFile = _trainFile;
     this.updateStorage();
   };
+  setSimulation = (_simulation) => {
+    this.simulation = _simulation;
+    this.updateStorage();
+  };
+  setInterpreter = (_interpreter) => {
+    this.interpreter = _interpreter;
+    this.updateStorage();
+  };
 
   updateStorage = () => localStorage.setItem("simulation", this.toString());
   clearStorage = () => localStorage.clear();
@@ -96,10 +107,29 @@ class Simulation {
     "epochs": ${this.epochs},
     "generation": ${this.generation},
     "population": ${this.population},
-    "learningRate": ${this.learningRate}
+    "learningRate": ${this.learningRate},
+    "simulation": ${this.simulation},
+    "interpreter": ${this.interpreter}
 }`;
+  };
+
+  toJSON = () => {
+    return {
+      nent: this.nent,
+      nsai: this.nsai,
+      nint: JSON.stringify(this.nint),
+      nintX: JSON.stringify(this.nintX),
+      activationFunction: JSON.stringify(this.activationFunction),
+      optimizer: JSON.stringify(this.optimizer),
+      batch: this.batch,
+      epochs: this.epochs,
+      generation: this.generation,
+      population: this.population,
+      learningRate: this.learningRate,
+      simulation: this.simulation,
+      interpreter: this.interpreter,
+    };
   };
 }
 
-
-export default new Simulation()
+export default new Simulation();

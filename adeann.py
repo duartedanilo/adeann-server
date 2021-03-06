@@ -2,6 +2,8 @@
 # python adeann.py minha_simulacao jherson 4 3 77 177 66 166 2 tanh tanh 0.001 rmsprop 32 3 python
 # DEBUG = True
 
+# python adeann.py default 00:13:ef:6b:35:04 10 10 1 200 1 tanh softmax 1 ["rmsprop"] 32 1000 python
+
 import json
 import os
 import numpy as np
@@ -74,6 +76,8 @@ NINT2 = 100
 LEARNING_RATE = 0.001
 ACTIVATION_FUNCTION1 = 'tanh'  # linear /
 ACTIVATION_FUNCTION2 = 'tanh'
+ACTIVATION_FUNCTION_N1 = 'linear'
+
 
 OPTIMIZER = 'rmsprop'
 
@@ -95,46 +99,52 @@ def getArgs(arg, reference):
 
 
 def setConfigurarion(argv):
-    global SIMULATION_NAME, USERNAME, GENERATIONS, SUBJECTS, MIN_NINT1, MAX_NINT1, MIN_NINT2, MAX_NINT2, NUMBER_OF_NINT, NINT1, NINT2, ACTIVATION_FUNCTION1, ACTIVATION_FUNCTION2, LEARNING_RATE, OPTIMIZER, BATCH_SIZE, EPOCHS, PYTHON_INTERPRETER
+    global SIMULATION_NAME, USERNAME, GENERATIONS, SUBJECTS, NENT, MIN_NINT1, MAX_NINT1, MIN_NINT2, MAX_NINT2, NUMBER_OF_NINT, NINT1, NINT2, ACTIVATION_FUNCTION1, ACTIVATION_FUNCTION2, ACTIVATION_FUNCTION_N1, LEARNING_RATE, OPTIMIZER, BATCH_SIZE, EPOCHS, PYTHON_INTERPRETER
     global PATH, fileWriter
 
-    if len(argv) < 16:
+    print("@@@@")
+
+    if len(argv) < 18:
         SIMULATION_NAME = getArgs(str(argv[1]), SIMULATION_NAME)
-        USERNAME = getArgs(str(argv[2]), USERNAME)
+        USERNAME = getArgs(str(argv[2]), USERNAME).replace(":", "_")
         GENERATIONS = getArgs(str(argv[3]), GENERATIONS)
         SUBJECTS = getArgs(str(argv[4]), SUBJECTS)
-        MIN_NINT1 = getArgs(str(argv[5]), MIN_NINT1)
-        MAX_NINT1 = getArgs(str(argv[6]), MAX_NINT1)
+        NENT = int(getArgs(str(argv[5]), NENT))
+        MIN_NINT1 = getArgs(str(argv[6]), MIN_NINT1)
+        MAX_NINT1 = getArgs(str(argv[7]), MAX_NINT1)
         NUMBER_OF_NINT = "1"
-        ACTIVATION_FUNCTION1 = getArgs(str(argv[8]), ACTIVATION_FUNCTION1)
-        LEARNING_RATE = (getArgs(str(argv[9]), LEARNING_RATE))
-        OPTIMIZER = getArgs(str(argv[10]), OPTIMIZER)
-        BATCH_SIZE = getArgs(str(argv[11]), BATCH_SIZE)
-        EPOCHS = getArgs(str(argv[12]), EPOCHS)
+        ACTIVATION_FUNCTION1 = getArgs(str(argv[9]), ACTIVATION_FUNCTION1)
+        ACTIVATION_FUNCTION_N1 = getArgs(str(argv[10]), ACTIVATION_FUNCTION_N1)
+        LEARNING_RATE = (getArgs(str(argv[11]), LEARNING_RATE))
+        OPTIMIZER = json.loads(getArgs(str(argv[12]), OPTIMIZER))
+        BATCH_SIZE = getArgs(str(argv[13]), BATCH_SIZE)
+        EPOCHS = getArgs(str(argv[14]), EPOCHS)
         try:
-            PYTHON_INTERPRETER = getArgs(str(argv[13]), PYTHON_INTERPRETER)
+            PYTHON_INTERPRETER = getArgs(str(argv[15]), PYTHON_INTERPRETER)
         except:
             pass
 
     else:
         SIMULATION_NAME = getArgs(str(argv[1]), SIMULATION_NAME)
-        USERNAME = getArgs(str(argv[2]), USERNAME)
+        USERNAME = getArgs(str(argv[2]), USERNAME).replace(":", "_")
         GENERATIONS = getArgs(str(argv[3]), GENERATIONS)
         SUBJECTS = getArgs(str(argv[4]), SUBJECTS)
-        MIN_NINT1 = getArgs(str(argv[5]), MIN_NINT1)
-        MAX_NINT1 = getArgs(str(argv[6]), MAX_NINT1)
-        MIN_NINT2 = getArgs(str(argv[7]), MIN_NINT2)
-        MAX_NINT2 = getArgs(str(argv[8]), MAX_NINT2)
+        NENT = int(getArgs(str(argv[5]), NENT))
+        MIN_NINT1 = getArgs(str(argv[6]), MIN_NINT1)
+        MAX_NINT1 = getArgs(str(argv[7]), MAX_NINT1)
+        MIN_NINT2 = getArgs(str(argv[8]), MIN_NINT2)
+        MAX_NINT2 = getArgs(str(argv[9]), MAX_NINT2)
         NUMBER_OF_NINT = "2"
-        ACTIVATION_FUNCTION1 = getArgs(str(argv[10]), ACTIVATION_FUNCTION1)
-        ACTIVATION_FUNCTION2 = getArgs(str(argv[11]), ACTIVATION_FUNCTION2)
-        LEARNING_RATE = getArgs(str(argv[12]), LEARNING_RATE)
-        OPTIMIZER = getArgs(str(argv[13]), OPTIMIZER)
-        BATCH_SIZE = getArgs(str(argv[14]), BATCH_SIZE)
-        EPOCHS = getArgs(str(argv[15]), EPOCHS)
+        ACTIVATION_FUNCTION1 = getArgs(str(argv[11]), ACTIVATION_FUNCTION1)
+        ACTIVATION_FUNCTION2 = getArgs(str(argv[12]), ACTIVATION_FUNCTION2)
+        ACTIVATION_FUNCTION_N1 = getArgs(str(argv[13]), ACTIVATION_FUNCTION_N1)
+        LEARNING_RATE = getArgs(str(argv[14]), LEARNING_RATE)
+        OPTIMIZER = json.loads(getArgs(str(argv[15]), OPTIMIZER))
+        BATCH_SIZE = getArgs(str(argv[16]), BATCH_SIZE)
+        EPOCHS = getArgs(str(argv[17]), EPOCHS)
 
         try:
-            PYTHON_INTERPRETER = getArgs(str(argv[16]), PYTHON_INTERPRETER)
+            PYTHON_INTERPRETER = getArgs(str(argv[18]), PYTHON_INTERPRETER)
         except:
             pass
 
@@ -147,24 +157,26 @@ def setConfigurarion(argv):
 
 
 def argsFormatted():
-    numberOfHiddenLayers = len(argv) < 17
+    numberOfHiddenLayers = len(argv) < 18
 
     if numberOfHiddenLayers:
         print("Simulation name: " + str(argv[1]))
         print("Username: " + str(argv[2]))
         print("Generations: " + str(argv[3]))
         print("Subjects: " + str(argv[4]))
-        print("Min NINT1: " + str(argv[5]))
-        print("Max NINT1: " + str(argv[6]))
-        print("Number of hidden layers]: " + str(argv[7]))
-        print("Activation function 1º: " + str(argv[8]))
-        print("Learning Rate: " + str(argv[9]))
-        print("Optimizer: " + str(argv[10]))
-        print("Batch size: " + str(argv[11]))
-        print("Epochs:     " + str(argv[12]))
+        print("Number of enter layer neurons: " + str(argv[5]))
+        print("Min NINT1: " + str(argv[6]))
+        print("Max NINT1: " + str(argv[7]))
+        print("Number of hidden layers: " + str(argv[8]))
+        print("Activation function 1º: " + str(argv[9]))
+        print("Activation function Out layer: " + str(argv[10]))
+        print("Learning Rate: " + str(argv[11]))
+        print("Optimizer: " + str(argv[12]))
+        print("Batch size: " + str(argv[13]))
+        print("Epochs:     " + str(argv[14]))
         try:
-          print("Interpreter:     " + str(argv[13]))
-        except e:
+          print("Interpreter:     " + str(argv[15]))
+        except Exception:
             pass
 
     else:
@@ -172,20 +184,22 @@ def argsFormatted():
         print("Username: " + str(argv[2]))
         print("Generations: " + str(argv[3]))
         print("Subjects: " + str(argv[4]))
-        print("Min NINT1: " + str(argv[5]))
-        print("Max NINT1: " + str(argv[6]))
-        print("Min NINT2: " + str(argv[7]))
-        print("Max NINT2: " + str(argv[8]))
-        print("Number of hidden layers]: " + str(argv[9]))
-        print("Activation function 1º: " + str(argv[10]))
-        print("Activation function 2º: " + str(argv[11]))
-        print("Learning Rate: " + str(argv[12]))
-        print("Optimizer: " + str(argv[13]))
-        print("Batch size: " + str(argv[14]))
-        print("Epochs:     " + str(argv[15]))
+        print("Number of enter layer neurons: " + str(argv[5]))
+        print("Min NINT1: " + str(argv[6]))
+        print("Max NINT1: " + str(argv[7]))
+        print("Min NINT2: " + str(argv[8]))
+        print("Max NINT2: " + str(argv[9]))
+        print("Number of hidden layers: " + str(argv[10]))
+        print("Activation function 1º: " + str(argv[11]))
+        print("Activation function 2º: " + str(argv[12]))
+        print("Activation function Out layer: " + str(argv[13]))
+        print("Learning Rate: " + str(argv[14]))
+        print("Optimizer: " + str(argv[15]))
+        print("Batch size: " + str(argv[16]))
+        print("Epochs:     " + str(argv[17]))
         try:
-          print("Interpreter:     " + str(argv[16]))
-        except e:
+          print("Interpreter:     " + str(argv[18]))
+        except Exception:
             pass
 
 
@@ -404,15 +418,6 @@ def mapeamento_genotipo_fenotipo(NENT, NSAI, aleatorio, TIPO, file):
     NINT_N4[0] = NINT1
     NINT_N4[1] = NINT2
 
-    try:
-        cmd = "c_exec\\executavel.exe " + str(NENT) + " " + str(NSAI) + " " + str(N) + " " + str(NINT1) + " " + str(
-            NINT2) + " "
-        cmd_out = os.popen(cmd).read()
-        writer(str(cmd_out))
-    except TypeError:
-        print("\n\n ERROR_CMD_TYPE \n\n")
-        exit(0)
-
     if N is 3:
         treina_rede(CONTID, file, NINT)
     if N is 4:
@@ -433,9 +438,10 @@ def treina_rede_(contind, file, NINT1, NINT2):
 
     try:
         # cmd = "python lstm_args_2.py 2 100 200 tanh tanh 0.001 rmsprop 32 3 132132132 " + str(SIMULATION_NAME) + " " + str(PATH)
-
-
-        cmd = ' '.join([PYTHON_INTERPRETER, RN_REFERENCE, NUMBER_OF_NINT, str(NINT1), str(NINT2 if NUMBER_OF_NINT is "2" else ""), ACTIVATION_FUNCTION1, str( ACTIVATION_FUNCTION2 if NUMBER_OF_NINT is "2" else ""), LEARNING_RATE, OPTIMIZER, BATCH_SIZE, EPOCHS, str(CONTID), SIMULATION_NAME, PATH])
+        # cmd = "python lstm_args_2.py 2 100 200 tanh tanh linear 0.001 rmsprop 32 3 132132132 " + str(SIMULATION_NAME) + " " + str(PATH)
+        # ann => python ann.py 1 192  tanh  softmax 1 rmsprop 32 1000 1 default simulations/06-03-2021_15-56-49___6b0a2767-b8e2-4d5e-85f3-73741028b22e___default
+        cmd = ' '.join([PYTHON_INTERPRETER, RN_REFERENCE, NUMBER_OF_NINT, str(NENT), str(NINT1), str(NINT2 if NUMBER_OF_NINT is "2" else ""), ACTIVATION_FUNCTION1, str( ACTIVATION_FUNCTION2 if NUMBER_OF_NINT is "2" else ""), ACTIVATION_FUNCTION_N1, LEARNING_RATE, str(OPTIMIZER[np.random.random_integers(0, len(OPTIMIZER)-1, 1)[0]]), BATCH_SIZE, EPOCHS, str(CONTID), SIMULATION_NAME, PATH])
+        # print(cmd)
         cmd_out = os.popen(cmd).read()
 
         string_builder = lambda type: "@@@@@@@@@@" + type + "@@@@@@@@@@"
@@ -605,6 +611,10 @@ def main():
     print("\n\n<<Simulacao Concluida - Relatorio Gerado!!>>")
     writer("\nsimulacao concluida")
 
+    if False:
+        # call again
+        pass
+
 
 def selecao(gen, gen_string, gene_dec):
     global FIT, e5
@@ -756,5 +766,4 @@ def imprime_cabec(file):
 
 setConfigurarion(argv)
 argsFormatted()
-
 main()
