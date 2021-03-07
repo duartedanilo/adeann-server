@@ -1,22 +1,19 @@
-import React, { useState } from "react";
-import {
-  Form,
-  Input,
-  Tooltip,
-  Cascader,
-  Divider,
-  Select,
-  Row,
-  Col,
-  Checkbox,
-  Button,
-  AutoComplete,
-  InputNumber,
-  Typography,
-  Card,
-  Steps,
-} from "antd";
 import { QuestionCircleOutlined, WarningOutlined } from "@ant-design/icons";
+import {
+  AutoComplete,
+  Button,
+  Card,
+  Col,
+  Divider,
+  Form,
+  InputNumber,
+  Radio,
+  Row,
+  Select,
+  Tooltip,
+  Typography,
+} from "antd";
+import React, { useState } from "react";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -56,6 +53,7 @@ const tailFormItemLayout = {
 
 const RegistrationForm = ({ onNextHandle, simulationService }) => {
   const [form] = Form.useForm();
+  const [annType, setAnnType] = useState("DENSE");
   const [nent, setNent] = useState(1);
   const [nsai, setNsai] = useState(1);
   const [nint, setNint] = useState([1]);
@@ -68,7 +66,7 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
     "0_0": "tanh",
     "1_0": "tanh",
     "1_1": "tanh",
-    "N_0": "tanh",
+    N_0: "tanh",
   });
 
   const [activationFunctionUpdate, setActivationFunctionUpdate] = useState(
@@ -120,21 +118,36 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
       <h2>ADEANN configuration</h2>
       <div style={{ display: "flex", flexDirection: "row", flex: 1 }}>
         <Card
-          title="Neural Network Settings"
+          title="Neural Network Hyperparameters"
           style={{
             display: "flex",
-            flex: 1,
+            flex: 3,
             flexDirection: "column",
             width: "100%",
           }}
         >
           <Form onFinish={onFinish} scrollToFirstError layout="vertical">
             <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item label={<span>Neural Network Type</span>}>
+                  <Radio.Group
+                    options={["DENSE", "LSTM"]}
+                    onChange={(event) => {
+                      setAnnType(event.target.value);
+                      simulationService.setAnnType(event.target.value);
+                    }}
+                    mode=""
+                    value={annType}
+                    optionType="button"
+                    buttonStyle="solid"
+                  />
+                </Form.Item>
+              </Col>
               <Col span={12}>
                 <Form.Item
                   label={
                     <span>
-                      Neurons of Entry Layer
+                      Neurons of Input Layer
                       <Tooltip title="NENT number">
                         <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
                       </Tooltip>
@@ -144,7 +157,7 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
                     {
                       required: true,
                       message:
-                        "Please input the number of neurons of Entry Layer!",
+                        "Please input the number of neurons of Input Layer!",
                     },
                   ]}
                   hasFeedback
@@ -165,7 +178,7 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
                 <Form.Item
                   label={
                     <span>
-                      Neurons of Outter Layer
+                      Neurons of Output Layer
                       <Tooltip title="NSAI number">
                         <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
                       </Tooltip>
@@ -340,8 +353,8 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
             <Form.Item
               label={
                 <span>
-                  Activation function of <strong>Out</strong> Layer
-                  <Tooltip title={`Activation Function for Out Layer`}>
+                  <strong>Output</strong> layer activation function
+                  <Tooltip title={`Output layer activation function`}>
                     <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
                   </Tooltip>
                 </span>
@@ -366,61 +379,68 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
 
             <Divider />
 
-            <Form.Item label="Optimizer function">
-              <Select
-                mode="tags"
-                value={optimizer}
-                onChange={(value) => {
-                  setOptimizer(value);
-                  simulationService.setOptimizer(value);
-                }}
-                style={{ width: "100%" }}
-              >
-                <Option value="rmsprop">rmsprop</Option>
-                <Option value="adam">adam</Option>
-                <Option value="sgd">sgd</Option>
-              </Select>
-            </Form.Item>
+            <Row gutter={16}>
+              <Col span={24 / 3}>
+                <Form.Item label="Optimizer function">
+                  <Select
+                    mode="tags"
+                    value={optimizer}
+                    onChange={(value) => {
+                      setOptimizer(value);
+                      simulationService.setOptimizer(value);
+                    }}
+                    style={{ width: "100%" }}
+                  >
+                    <Option value="rmsprop">rmsprop</Option>
+                    <Option value="adam">adam</Option>
+                    <Option value="sgd">sgd</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
 
-            <Form.Item
-              label={
-                <span>
-                  Batch Size
-                  <Tooltip title="Number of tranning samples used">
-                    <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
-                  </Tooltip>
-                </span>
-              }
-            >
-              <InputNumber
-                value={batch}
-                onChange={(value) => {
-                  setBatch(value);
-                  simulationService.setBatch(value);
-                }}
-                style={{ width: "100%" }}
-              />
-            </Form.Item>
-
-            <Form.Item
-              label={
-                <span>
-                  Epochs
-                  <Tooltip title="Training cycle of the training set">
-                    <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
-                  </Tooltip>
-                </span>
-              }
-            >
-              <InputNumber
-                value={epochs}
-                onChange={(value) => {
-                  setEpochs(value);
-                  simulationService.setEpochs(value);
-                }}
-                style={{ width: "100%" }}
-              />
-            </Form.Item>
+              <Col span={24 / 3}>
+                <Form.Item
+                  label={
+                    <span>
+                      Batch Size
+                      <Tooltip title="Number of tranning samples used">
+                        <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
+                      </Tooltip>
+                    </span>
+                  }
+                >
+                  <InputNumber
+                    value={batch}
+                    onChange={(value) => {
+                      setBatch(value);
+                      simulationService.setBatch(value);
+                    }}
+                    style={{ width: "100%" }}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={24 / 3}>
+                <Form.Item
+                  label={
+                    <span>
+                      Epochs
+                      <Tooltip title="Training cycle of the training set">
+                        <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
+                      </Tooltip>
+                    </span>
+                  }
+                >
+                  <InputNumber
+                    value={epochs}
+                    onChange={(value) => {
+                      setEpochs(value);
+                      simulationService.setEpochs(value);
+                    }}
+                    style={{ width: "100%" }}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
           </Form>
         </Card>
 
@@ -434,67 +454,73 @@ const RegistrationForm = ({ onNextHandle, simulationService }) => {
           }}
         >
           <Form onFinish={onFinish} scrollToFirstError layout="vertical">
-            <Form.Item
-              label={
-                <span>
-                  Generations
-                  <Tooltip title="Number of generations">
-                    <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
-                  </Tooltip>
-                </span>
-              }
-            >
-              <InputNumber
-                style={{ width: "100%" }}
-                min={1}
-                max={100}
-                value={generation}
-                onChange={(value) => {
-                  setGeneration(value);
-                  simulationService.setGeneration(value);
-                }}
-              />
-            </Form.Item>
-
-            <Form.Item
-              label={
-                <span>
-                  Population
-                  <Tooltip title="Number of subjects in a population">
-                    <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
-                  </Tooltip>
-                </span>
-              }
-            >
-              <InputNumber
-                value={population}
-                onChange={(value) => {
-                  setPopulation(value);
-                  simulationService.setPopulation(value);
-                }}
-                style={{ width: "100%" }}
-              />
-            </Form.Item>
-
-            <Form.Item
-              label={
-                <span>
-                  Learning Rating
-                  <Tooltip title="tax used in learning process">
-                    <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
-                  </Tooltip>
-                </span>
-              }
-            >
-              <InputNumber
-                value={learningRate}
-                onChange={(value) => {
-                  setLearningRate(value);
-                  simulationService.setLearningRate(value);
-                }}
-                style={{ width: "100%" }}
-              />
-            </Form.Item>
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item
+                  label={
+                    <span>
+                      Generations
+                      <Tooltip title="Number of generations">
+                        <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
+                      </Tooltip>
+                    </span>
+                  }
+                >
+                  <InputNumber
+                    style={{ width: "100%" }}
+                    min={1}
+                    max={100}
+                    value={generation}
+                    onChange={(value) => {
+                      setGeneration(value);
+                      simulationService.setGeneration(value);
+                    }}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={24}>
+                <Form.Item
+                  label={
+                    <span>
+                      Population
+                      <Tooltip title="Number of subjects in a population">
+                        <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
+                      </Tooltip>
+                    </span>
+                  }
+                >
+                  <InputNumber
+                    value={population}
+                    onChange={(value) => {
+                      setPopulation(value);
+                      simulationService.setPopulation(value);
+                    }}
+                    style={{ width: "100%" }}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={24}>
+                <Form.Item
+                  label={
+                    <span>
+                      Learning Rating
+                      <Tooltip title="tax used in learning process">
+                        <QuestionCircleOutlined style={{ marginLeft: "3px" }} />
+                      </Tooltip>
+                    </span>
+                  }
+                >
+                  <InputNumber
+                    value={learningRate}
+                    onChange={(value) => {
+                      setLearningRate(value);
+                      simulationService.setLearningRate(value);
+                    }}
+                    style={{ width: "100%" }}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
           </Form>
         </Card>
       </div>

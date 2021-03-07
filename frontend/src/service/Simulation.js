@@ -1,6 +1,7 @@
 class Simulation {
   constructor() {
     localStorage.clear();
+    this.annType = "DENSE";
     this.nent = 1;
     this.nsai = 1;
     this.nint = [1];
@@ -13,6 +14,7 @@ class Simulation {
       "0_0": "tanh",
       "1_0": "tanh",
       "1_1": "tanh",
+      N_0: "linear",
     };
     this.batch = "32";
     this.optimizer = ["rmsprop"];
@@ -29,6 +31,11 @@ class Simulation {
     this.interpreter = "";
     localStorage.setItem("simulation", this.toString());
   }
+
+  setAnnType = (_annType) => {
+    this.annType = _annType;
+    this.updateStorage();
+  };
 
   setNent = (_nent) => {
     this.nent = _nent;
@@ -97,6 +104,7 @@ class Simulation {
 
   toString = () => {
     return `{
+    "annType": ${this.annType},  
     "nent": ${this.nent},
     "nsai": ${this.nsai},
     "nint": ${JSON.stringify(this.nint)},
@@ -115,6 +123,7 @@ class Simulation {
 
   toJSON = () => {
     return {
+      annType: this.annType,
       nent: this.nent,
       nsai: this.nsai,
       nint: JSON.stringify(this.nint),

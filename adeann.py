@@ -53,14 +53,15 @@ tab_converte = ['f', 'F', 'n', '.', 'n', '.', 'f', 'F', 'F', 'f', 'B', 'f', '[',
                 '.', ']', 'n', 'F', 'f', 'B', 'f', 'B', 'F', '[', 'B', 'n', '*', 'f', '.', ']',
                 ']', '[', 'n', 'F', 'n', 'B', '[', '.', 'f', ']', 'B', 'F', 'B', 'f', '*', '[']
 
+listOfAnnReferences = {"DENSE": "ann-dense.py", "LSTM": 'ann-lstm.py'}
 # ADEAN PARAMETES
-
 RN_REFERENCE = 'ann.py'
 PYTHON_INTERPRETER = 'python'
 SIMULATION_NAME = ''
 USERNAME = ''
 GENERATIONS = 4
 SUBJECTS = 3
+ANN_TYPE = 'DENSE'
 MIN_NINT1 = 80
 MAX_NINT1 = 100
 MIN_NINT2 = 80
@@ -99,28 +100,29 @@ def getArgs(arg, reference):
 
 
 def setConfigurarion(argv):
-    global SIMULATION_NAME, USERNAME, GENERATIONS, SUBJECTS, NENT, MIN_NINT1, MAX_NINT1, MIN_NINT2, MAX_NINT2, NUMBER_OF_NINT, NINT1, NINT2, ACTIVATION_FUNCTION1, ACTIVATION_FUNCTION2, ACTIVATION_FUNCTION_N1, LEARNING_RATE, OPTIMIZER, BATCH_SIZE, EPOCHS, PYTHON_INTERPRETER
+    global SIMULATION_NAME, USERNAME, GENERATIONS, SUBJECTS, ANN_TYPE, NENT, MIN_NINT1, MAX_NINT1, MIN_NINT2, MAX_NINT2, NUMBER_OF_NINT, NINT1, NINT2, ACTIVATION_FUNCTION1, ACTIVATION_FUNCTION2, ACTIVATION_FUNCTION_N1, LEARNING_RATE, OPTIMIZER, BATCH_SIZE, EPOCHS, PYTHON_INTERPRETER
     global PATH, fileWriter
 
     print("@@@@")
 
-    if len(argv) < 18:
+    if len(argv) < 19:
         SIMULATION_NAME = getArgs(str(argv[1]), SIMULATION_NAME)
         USERNAME = getArgs(str(argv[2]), USERNAME).replace(":", "_")
         GENERATIONS = getArgs(str(argv[3]), GENERATIONS)
         SUBJECTS = getArgs(str(argv[4]), SUBJECTS)
-        NENT = int(getArgs(str(argv[5]), NENT))
-        MIN_NINT1 = getArgs(str(argv[6]), MIN_NINT1)
-        MAX_NINT1 = getArgs(str(argv[7]), MAX_NINT1)
+        ANN_TYPE = getArgs(str(argv[5]), SUBJECTS)
+        NENT = int(getArgs(str(argv[6]), NENT))
+        MIN_NINT1 = getArgs(str(argv[7]), MIN_NINT1)
+        MAX_NINT1 = getArgs(str(argv[8]), MAX_NINT1)
         NUMBER_OF_NINT = "1"
-        ACTIVATION_FUNCTION1 = getArgs(str(argv[9]), ACTIVATION_FUNCTION1)
-        ACTIVATION_FUNCTION_N1 = getArgs(str(argv[10]), ACTIVATION_FUNCTION_N1)
-        LEARNING_RATE = (getArgs(str(argv[11]), LEARNING_RATE))
-        OPTIMIZER = json.loads(getArgs(str(argv[12]), OPTIMIZER))
-        BATCH_SIZE = getArgs(str(argv[13]), BATCH_SIZE)
-        EPOCHS = getArgs(str(argv[14]), EPOCHS)
+        ACTIVATION_FUNCTION1 = getArgs(str(argv[10]), ACTIVATION_FUNCTION1)
+        ACTIVATION_FUNCTION_N1 = getArgs(str(argv[11]), ACTIVATION_FUNCTION_N1)
+        LEARNING_RATE = (getArgs(str(argv[12]), LEARNING_RATE))
+        OPTIMIZER = json.loads(getArgs(str(argv[13]), OPTIMIZER))
+        BATCH_SIZE = getArgs(str(argv[14]), BATCH_SIZE)
+        EPOCHS = getArgs(str(argv[15]), EPOCHS)
         try:
-            PYTHON_INTERPRETER = getArgs(str(argv[15]), PYTHON_INTERPRETER)
+            PYTHON_INTERPRETER = getArgs(str(argv[16]), PYTHON_INTERPRETER)
         except:
             pass
 
@@ -129,22 +131,23 @@ def setConfigurarion(argv):
         USERNAME = getArgs(str(argv[2]), USERNAME).replace(":", "_")
         GENERATIONS = getArgs(str(argv[3]), GENERATIONS)
         SUBJECTS = getArgs(str(argv[4]), SUBJECTS)
-        NENT = int(getArgs(str(argv[5]), NENT))
-        MIN_NINT1 = getArgs(str(argv[6]), MIN_NINT1)
-        MAX_NINT1 = getArgs(str(argv[7]), MAX_NINT1)
-        MIN_NINT2 = getArgs(str(argv[8]), MIN_NINT2)
-        MAX_NINT2 = getArgs(str(argv[9]), MAX_NINT2)
+        ANN_TYPE = getArgs(str(argv[5]), ANN_TYPE)
+        NENT = int(getArgs(str(argv[6]), NENT))
+        MIN_NINT1 = getArgs(str(argv[7]), MIN_NINT1)
+        MAX_NINT1 = getArgs(str(argv[8]), MAX_NINT1)
+        MIN_NINT2 = getArgs(str(argv[9]), MIN_NINT2)
+        MAX_NINT2 = getArgs(str(argv[10]), MAX_NINT2)
         NUMBER_OF_NINT = "2"
-        ACTIVATION_FUNCTION1 = getArgs(str(argv[11]), ACTIVATION_FUNCTION1)
-        ACTIVATION_FUNCTION2 = getArgs(str(argv[12]), ACTIVATION_FUNCTION2)
-        ACTIVATION_FUNCTION_N1 = getArgs(str(argv[13]), ACTIVATION_FUNCTION_N1)
-        LEARNING_RATE = getArgs(str(argv[14]), LEARNING_RATE)
-        OPTIMIZER = json.loads(getArgs(str(argv[15]), OPTIMIZER))
-        BATCH_SIZE = getArgs(str(argv[16]), BATCH_SIZE)
-        EPOCHS = getArgs(str(argv[17]), EPOCHS)
+        ACTIVATION_FUNCTION1 = getArgs(str(argv[12]), ACTIVATION_FUNCTION1)
+        ACTIVATION_FUNCTION2 = getArgs(str(argv[13]), ACTIVATION_FUNCTION2)
+        ACTIVATION_FUNCTION_N1 = getArgs(str(argv[14]), ACTIVATION_FUNCTION_N1)
+        LEARNING_RATE = getArgs(str(argv[15]), LEARNING_RATE)
+        OPTIMIZER = json.loads(getArgs(str(argv[16]), OPTIMIZER))
+        BATCH_SIZE = getArgs(str(argv[17]), BATCH_SIZE)
+        EPOCHS = getArgs(str(argv[18]), EPOCHS)
 
         try:
-            PYTHON_INTERPRETER = getArgs(str(argv[18]), PYTHON_INTERPRETER)
+            PYTHON_INTERPRETER = getArgs(str(argv[19]), PYTHON_INTERPRETER)
         except:
             pass
 
@@ -157,25 +160,26 @@ def setConfigurarion(argv):
 
 
 def argsFormatted():
-    numberOfHiddenLayers = len(argv) < 18
+    numberOfHiddenLayers = len(argv) < 19
 
     if numberOfHiddenLayers:
         print("Simulation name: " + str(argv[1]))
         print("Username: " + str(argv[2]))
         print("Generations: " + str(argv[3]))
         print("Subjects: " + str(argv[4]))
-        print("Number of enter layer neurons: " + str(argv[5]))
-        print("Min NINT1: " + str(argv[6]))
-        print("Max NINT1: " + str(argv[7]))
-        print("Number of hidden layers: " + str(argv[8]))
-        print("Activation function 1º: " + str(argv[9]))
-        print("Activation function Out layer: " + str(argv[10]))
-        print("Learning Rate: " + str(argv[11]))
-        print("Optimizer: " + str(argv[12]))
-        print("Batch size: " + str(argv[13]))
-        print("Epochs:     " + str(argv[14]))
+        print("Neural Network Type: " + str(argv[5]))
+        print("Number of enter layer neurons: " + str(argv[6]))
+        print("Min NINT1: " + str(argv[7]))
+        print("Max NINT1: " + str(argv[8]))
+        print("Number of hidden layers: " + str(argv[9]))
+        print("Activation function 1º: " + str(argv[10]))
+        print("Activation function Out layer: " + str(argv[11]))
+        print("Learning Rate: " + str(argv[12]))
+        print("Optimizer: " + str(argv[13]))
+        print("Batch size: " + str(argv[14]))
+        print("Epochs:     " + str(argv[15]))
         try:
-          print("Interpreter:     " + str(argv[15]))
+          print("Interpreter:     " + str(argv[16]))
         except Exception:
             pass
 
@@ -184,21 +188,22 @@ def argsFormatted():
         print("Username: " + str(argv[2]))
         print("Generations: " + str(argv[3]))
         print("Subjects: " + str(argv[4]))
-        print("Number of enter layer neurons: " + str(argv[5]))
-        print("Min NINT1: " + str(argv[6]))
-        print("Max NINT1: " + str(argv[7]))
-        print("Min NINT2: " + str(argv[8]))
-        print("Max NINT2: " + str(argv[9]))
-        print("Number of hidden layers: " + str(argv[10]))
-        print("Activation function 1º: " + str(argv[11]))
-        print("Activation function 2º: " + str(argv[12]))
-        print("Activation function Out layer: " + str(argv[13]))
-        print("Learning Rate: " + str(argv[14]))
-        print("Optimizer: " + str(argv[15]))
-        print("Batch size: " + str(argv[16]))
-        print("Epochs:     " + str(argv[17]))
+        print("Neural Network Type: " + str(argv[5]))
+        print("Number of enter layer neurons: " + str(argv[6]))
+        print("Min NINT1: " + str(argv[7]))
+        print("Max NINT1: " + str(argv[8]))
+        print("Min NINT2: " + str(argv[9]))
+        print("Max NINT2: " + str(argv[10]))
+        print("Number of hidden layers: " + str(argv[11]))
+        print("Activation function 1º: " + str(argv[12]))
+        print("Activation function 2º: " + str(argv[13]))
+        print("Activation function Out layer: " + str(argv[14]))
+        print("Learning Rate: " + str(argv[15]))
+        print("Optimizer: " + str(argv[16]))
+        print("Batch size: " + str(argv[17]))
+        print("Epochs:     " + str(argv[18]))
         try:
-          print("Interpreter:     " + str(argv[18]))
+          print("Interpreter:     " + str(argv[19]))
         except Exception:
             pass
 
@@ -403,7 +408,7 @@ def avalia_regras_gen_string(gen_string, individuos, gene_dec):
 
 
 def mapeamento_genotipo_fenotipo(NENT, NSAI, aleatorio, TIPO, file):
-    global NINT, NINT1, NINT2, MIN_NINT1, MAX_NINT1, MIN_NINT2, MAX_NINT2
+    global NINT, NINT1, NINT2, MIN_NINT1, MAX_NINT1, MIN_NINT2, MAX_NINT2, RN_REFERENCE
 
     N_TIPO = np.random.random_integers(int(MIN_NINT1), int(MAX_NINT1), 1)[0]
 
@@ -417,11 +422,10 @@ def mapeamento_genotipo_fenotipo(NENT, NSAI, aleatorio, TIPO, file):
     NINT_N4 = np.zeros(2)
     NINT_N4[0] = NINT1
     NINT_N4[1] = NINT2
+    
 
-    if N is 3:
-        treina_rede(CONTID, file, NINT)
-    if N is 4:
-        treina_rede_(CONTID, file, NINT1, NINT2)
+    RN_REFERENCE = listOfAnnReferences[ANN_TYPE]
+    train_network(CONTID, file, NINT1, NINT2)
 
 
 def NR_RAND(int):
@@ -432,7 +436,7 @@ def treina_rede(individuos, file, NINT):
     pass
 
 
-def treina_rede_(contind, file, NINT1, NINT2):
+def train_network(contind, file, NINT1, NINT2):
     global EMQ, FITNESS, INDIC, NENT, NINT, NSAI, N, MAXITER, metrics, CONTID, lista_preco_real
     global PYTHON_INTERPRETER, RN_REFERENCE, NUMBER_OF_NINT, ACTIVATION_FUNCTION1, ACTIVATION_FUNCTION2, LEARNING_RATE, OPTIMIZER, BATCH_SIZE, EPOCHS, SIMULATION_NAME, PATH
 

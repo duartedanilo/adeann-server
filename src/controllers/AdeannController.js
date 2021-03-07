@@ -165,6 +165,7 @@ class AdeannController {
         username: getmac.default(), //
         generations: body.generation,
         individuals: body.population,
+        ann_type: body.annType,
         number_enter_layers: body.nent,
         number_hidden_layers: number_hidden_layers,
         number_out_layers: body.nsai,
@@ -193,6 +194,7 @@ class AdeannController {
       username,
       generations,
       individuals,
+      ann_type,
       number_enter_layers,
       number_hidden_layers,
       number_out_layers,
@@ -225,7 +227,7 @@ class AdeannController {
       if (number_hidden_layers[0] === 2)
         command = `${
           interpreter || "python"
-        } adeann.py ${simulation_name} ${username} ${generations} ${individuals} ${number_enter_layers} ${hidden_layer_1_min} ${hidden_layer_1_max} ${hidden_layer_2_min} ${hidden_layer_2_max} ${
+        } adeann.py ${simulation_name} ${username} ${generations} ${individuals} ${ann_type} ${number_enter_layers} ${hidden_layer_1_min} ${hidden_layer_1_max} ${hidden_layer_2_min} ${hidden_layer_2_max} ${
           2 /*number_hidden_layers*/
         } ${activation_function_1} ${activation_function_2} ${activation_function_N_0} ${learning_rate} ${optimizer} ${batch_size} ${epochs} ${
           interpreter || "python"
@@ -233,7 +235,7 @@ class AdeannController {
       else
         command = `${
           interpreter || "python"
-        } adeann.py ${simulation_name} ${username} ${generations} ${individuals} ${number_enter_layers} ${hidden_layer_0_min} ${hidden_layer_0_max} ${
+        } adeann.py ${simulation_name} ${username} ${generations} ${individuals} ${ann_type} ${number_enter_layers} ${hidden_layer_0_min} ${hidden_layer_0_max} ${
           1 /*number_hidden_layers*/
         } ${activation_function_0} ${activation_function_N_0} ${learning_rate} ${optimizer} ${batch_size} ${epochs} ${
           interpreter || "python"
