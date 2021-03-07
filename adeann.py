@@ -422,7 +422,7 @@ def mapeamento_genotipo_fenotipo(NENT, NSAI, aleatorio, TIPO, file):
     NINT_N4 = np.zeros(2)
     NINT_N4[0] = NINT1
     NINT_N4[1] = NINT2
-    
+
 
     RN_REFERENCE = listOfAnnReferences[ANN_TYPE]
     train_network(CONTID, file, NINT1, NINT2)
@@ -768,6 +768,7 @@ def imprime_cabec(file):
     writer("\n Geracao  |Melhor Fitness         |Fitness Medio")
     writer("\n________________________________________________________________")
 
-setConfigurarion(argv)
-argsFormatted()
-main()
+if __name__ == '__main__':
+    setConfigurarion(argv)
+    argsFormatted()
+    main()
