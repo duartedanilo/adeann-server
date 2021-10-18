@@ -1,0 +1,25 @@
+version: "3.7"
+services:
+  backend:
+    build: .
+    image: "adeann-server-backend"
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/code
+      - /code/server/node_modules
+    stdin_open: true
+    tty: true
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    image: "adeann-server-frontend"
+    ports:
+      - "3000:3000"
+    volumes:
+      - /app/node_modules
+    links:
+      - backend
+    stdin_open: true
+    tty: true

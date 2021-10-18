@@ -1,0 +1,9 @@
+Keras==2.2.4
+Keras-Applications==1.0.6
+Keras-Preprocessing==1.0.5
+matplotlib
+numpy==1.15.4
+pandas==0.24.0
+scikit-learn==0.20.2
+tensorboard==1.12.2
+tensorflow==1.12.0
