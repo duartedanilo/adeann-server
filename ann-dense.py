@@ -6,7 +6,7 @@ import uuid
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 from datetime import datetime
-from sys import argv, plataform
+from sys import argv, platform
 
 import keras.backend as K
 import matplotlib.patches as mpatches
@@ -396,7 +396,7 @@ with open(SIMULATION_PATH + "/" + path + "/configurations.txt", "w") as file:
     file.write(str(json.dumps(configuration())))
 
 try:
-    cmd = ' '.join(["c_exec\\executavel.exe " if plataform != "linux" else "c_exec/executavel", str(NENT), str(1), str(int(NUMBER_OF_NINT) + 2), str(NINT1), str(NINT2)])
+    cmd = ' '.join(["c_exec\\executavel.exe " if platform != "linux" else "c_exec/executavel", str(NENT), str(1), str(int(NUMBER_OF_NINT) + 2), str(NINT1), str(NINT2)])
     cmd_out = os.popen(cmd).read()
     with open(SIMULATION_PATH + "/" + path + "/genotype.txt", "w") as file:
         file.write(str(cmd_out))
